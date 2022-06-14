@@ -18,6 +18,9 @@ services:
           - dev.qa.com.mx
   web:
     image: forg-node-yarn
+    build:
+      context: .
+      dockerfile: dockerfiles/yarn/yarn.Dockerfile
     environment:
       NUXT_HOST: 0.0.0.0
       NUXT_PORT: 8080
