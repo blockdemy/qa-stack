@@ -1,0 +1,35 @@
+version: '3.7'
+
+services:
+  gtw:
+    image: nginx:1.17.0
+    depends_on:
+      - web
+    volumes:
+      - ./gtw/nginx.conf:/etc/nginx/nginx.conf
+      - ./gtw/server.crt:/etc/nginx/server.crt
+      - ./gtw/server.key:/etc/nginx/server.key
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      default:
+        aliases:
+          - dev.qa.com.mx
+  web:
+    image: forg-node-yarn
+    environment:
+      NUXT_HOST: 0.0.0.0
+      NUXT_PORT: 8080
+
+    volumes:
+      - ./qa-web-app:/app
+      - web-node_modules:/app/node_modules/
+    command: sh -c 'echo "Running install ..."
+        && yarn install
+        && echo "Running ..."
+        && yarn run dev'
+  #will check if adminer should be necesary to dbsu, although I think it should not.
+
+volumes:
+  web-node_modules:
